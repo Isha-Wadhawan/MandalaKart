@@ -15,72 +15,290 @@ useEffect(() => {
     return <div className="text-center p-20">Loading profile...</div>;
   }
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 md:p-12">
-      {/* Header Section */}
-      <div className="flex flex-col items-center mb-12 animate-fadeIn">
-        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 shadow-sm mb-4">
-          <span className="text-3xl font-light text-gray-500">
-            {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-          </span>
+return (
+  <div className="relative w-full min-h-screen overflow-hidden bg-[#050816]">
+
+    {/* BACKGROUND GLOWS */}
+    <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-500/20 blur-3xl rounded-full"></div>
+
+    <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/20 blur-3xl rounded-full"></div>
+
+    <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-14">
+
+      {/* PROFILE HERO */}
+      <div
+        className="relative overflow-hidden rounded-[2rem]
+        bg-white/5 backdrop-blur-2xl
+        border border-white/10
+        shadow-2xl shadow-blue-900/20
+        p-8 sm:p-10"
+      >
+
+        {/* glow */}
+        <div className="absolute inset-0 opacity-60
+        bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.15),transparent_40%)]"></div>
+
+        <div className="relative flex flex-col lg:flex-row items-center lg:items-start gap-10">
+
+          {/* LEFT */}
+          <div className="flex flex-col items-center lg:items-start">
+
+            {/* AVATAR */}
+            <div
+              className="relative w-32 h-32 rounded-full
+              bg-gradient-to-br from-blue-500 to-indigo-600
+              flex items-center justify-center
+              shadow-2xl shadow-blue-500/30"
+            >
+
+              {/* outer ring */}
+              <div className="absolute inset-0 rounded-full border border-white/20"></div>
+
+              <span className="text-5xl font-semibold text-white">
+                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              </span>
+
+            </div>
+
+            {/* badge */}
+            <div
+              className="mt-5 px-4 py-2 rounded-full
+              bg-emerald-400/10 border border-emerald-400/20
+              text-emerald-300 text-xs tracking-[0.2em]"
+            >
+
+              ✦ VERIFIED COLLECTOR ✦
+
+            </div>
+
+          </div>
+
+          {/* RIGHT */}
+          <div className="flex-1 text-center lg:text-left">
+
+            <p className="text-blue-300 uppercase tracking-[0.25em] text-sm">
+              Profile Overview
+            </p>
+
+            <h1 className="mt-3 text-4xl sm:text-5xl font-semibold text-white">
+              {user.name}
+            </h1>
+
+            <p className="mt-4 text-blue-200 text-lg">
+              {user.email}
+            </p>
+
+            <p className="mt-6 text-blue-100/70 leading-relaxed max-w-2xl">
+              Welcome back to your mandala sanctuary. Explore handcrafted artwork,
+              track your cosmic creations, and continue building your peaceful collection.
+            </p>
+
+            {/* STATS */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8">
+
+              <div
+                className="rounded-2xl
+                bg-white/5 border border-white/10
+                p-5"
+              >
+
+                <p className="text-2xl font-semibold text-white">
+                  ✨
+                </p>
+
+                <p className="mt-2 text-sm text-blue-200">
+                  Art Collector
+                </p>
+
+              </div>
+
+              <div
+                className="rounded-2xl
+                bg-white/5 border border-white/10
+                p-5"
+              >
+
+                <p className="text-2xl font-semibold text-white">
+                  🎨
+                </p>
+
+                <p className="mt-2 text-sm text-blue-200">
+                  Mandala Lover
+                </p>
+
+              </div>
+
+              <div
+                className="rounded-2xl
+                bg-white/5 border border-white/10
+                p-5 col-span-2 sm:col-span-1"
+              >
+
+                <p className="text-2xl font-semibold text-white">
+                  🌌
+                </p>
+
+                <p className="mt-2 text-sm text-blue-200">
+                  Peaceful Vibes
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
-        <h1 className="text-2xl font-semibold text-gray-800">{user.name}</h1>
-        <p className="text-gray-500 font-light">{user.email}</p>
+
       </div>
 
-      <hr className="border-gray-100 mb-12" />
+      {/* ACTION CARDS */}
+      <div className="grid md:grid-cols-2 gap-7 mt-12">
 
-      {/* Navigation Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* My Orders Card */}
-        <div 
+        {/* ORDERS */}
+        <div
           onClick={() => navigate('/orders')}
-          className="group cursor-pointer p-8 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
+          className="group relative overflow-hidden cursor-pointer
+          rounded-[2rem]
+          bg-white/5 backdrop-blur-2xl
+          border border-white/10
+          p-7
+          hover:border-blue-400/40
+          transition duration-500
+          hover:-translate-y-2
+          shadow-xl shadow-blue-900/10"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-              <img className="w-6 opacity-70" src={assets.parcel_icon} alt="Orders" />
+
+          {/* glow */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-700
+          bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_50%)]"></div>
+
+          <div className="relative">
+
+            <div className="flex items-center justify-between">
+
+              <div
+                className="w-16 h-16 rounded-2xl
+                bg-blue-500/10 border border-blue-400/20
+                flex items-center justify-center"
+              >
+
+                <img
+                  className="w-8 opacity-90"
+                  src={assets.parcel_icon}
+                  alt=""
+                />
+
+              </div>
+
+              <span className="text-3xl text-blue-300 group-hover:translate-x-1 transition">
+                →
+              </span>
+
             </div>
-            <span className="text-gray-300 group-hover:text-blue-500 transition-colors">→</span>
+
+            <h2 className="mt-7 text-2xl font-semibold text-white">
+              My Orders
+            </h2>
+
+            <p className="mt-3 text-blue-200 leading-relaxed">
+              Track shipments, payment status, and your handcrafted mandala journey.
+            </p>
+
           </div>
-          <h3 className="text-lg font-medium text-gray-800">My Orders</h3>
-          <p className="text-sm text-gray-500 mt-1 font-light italic">
-            Check your order history and tracking status.
-          </p>
+
+          <div className="h-[2px] w-0 group-hover:w-full
+          bg-gradient-to-r from-blue-400 to-transparent
+          transition-all duration-700 mt-7"></div>
+
         </div>
 
-        {/* Collection Card */}
-        <div 
+        {/* COLLECTION */}
+        <div
           onClick={() => navigate('/collection')}
-          className="group cursor-pointer p-8 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1"
+          className="group relative overflow-hidden cursor-pointer
+          rounded-[2rem]
+          bg-white/5 backdrop-blur-2xl
+          border border-white/10
+          p-7
+          hover:border-purple-400/40
+          transition duration-500
+          hover:-translate-y-2
+          shadow-xl shadow-purple-900/10"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-orange-50 rounded-lg group-hover:bg-orange-100 transition-colors">
-              {/* Replace with a 'Grid' or 'Menu' icon from your assets */}
-              <img className="w-6 opacity-70" src={assets.menu_icon} alt="Collection" />
+
+          {/* glow */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-700
+          bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_50%)]"></div>
+
+          <div className="relative">
+
+            <div className="flex items-center justify-between">
+
+              <div
+                className="w-16 h-16 rounded-2xl
+                bg-purple-500/10 border border-purple-400/20
+                flex items-center justify-center"
+              >
+
+                <img
+                  className="w-8 opacity-90"
+                  src={assets.menu_icon}
+                  alt=""
+                />
+
+              </div>
+
+              <span className="text-3xl text-purple-300 group-hover:translate-x-1 transition">
+                →
+              </span>
+
             </div>
-            <span className="text-gray-300 group-hover:text-orange-500 transition-colors">→</span>
+
+            <h2 className="mt-7 text-2xl font-semibold text-white">
+              Browse Collection
+            </h2>
+
+            <p className="mt-3 text-blue-200 leading-relaxed">
+              Explore calming artwork, layered symmetry, and modern mandala creations.
+            </p>
+
           </div>
-          <h3 className="text-lg font-medium text-gray-800">Browse Collection</h3>
-          <p className="text-sm text-gray-500 mt-1 font-light italic">
-            Explore our latest Mandalas and Art pieces.
-          </p>
+
+          <div className="h-[2px] w-0 group-hover:w-full
+          bg-gradient-to-r from-purple-400 to-transparent
+          transition-all duration-700 mt-7"></div>
+
         </div>
 
       </div>
 
-      {/* Footer Logout Option */}
-      <div className="mt-16 text-center">
-        <button 
-          onClick={() => { localStorage.removeItem('token'); window.location.href = '/login'; }}
-          className="text-sm text-gray-400 hover:text-red-500 transition-colors underline underline-offset-4"
+      {/* LOGOUT */}
+      <div className="flex justify-center mt-16">
+
+        <button
+          onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+          }}
+          className="group px-7 py-4 rounded-2xl
+          bg-red-500/10 border border-red-400/20
+          text-red-300
+          hover:bg-red-500 hover:text-white
+          transition duration-300
+          hover:shadow-xl hover:shadow-red-500/20"
         >
-          Logout from Account
+
+          Logout From Account
+
         </button>
+
       </div>
+
     </div>
-  );
+
+  </div>
+)
 };
 
 export default Profile;

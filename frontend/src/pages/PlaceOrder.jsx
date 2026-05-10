@@ -50,12 +50,12 @@ const PlaceOrder = () => {
   // calculate final amount
   const amount = getCartAmount() + delivery_fee;
 
-  // create dynamic UPI link
+  // create dynamic UPI link 
   // detect mobile
   const isMobile = /Android|iPhone/i.test(navigator.userAgent);
 
 
-  const initPay = (order) => {
+  const initPay = (order, orderItems) => {
     if (!window.Razorpay) {
       toast.error("Razorpay SDK failed to load. Please check your internet connection.");
       return;
@@ -67,13 +67,31 @@ const PlaceOrder = () => {
       name: 'Mandala by Jigyasa',
       description: 'Order Payment',
       order_id: order.id,
+
       handler: async (response) => {
+          console.log("HANDLER STARTED", response);
+
         try {
+            console.log("SENDING DATA:", {
+      ...response,
+      userId: user?._id,
+      items: orderItems,
+      address: formData,
+      amount
+    });
            const { data } = await axios.post(
     backendUrl + '/api/order/verifyRazorpay',
-    response,
+    {
+    ...response,
+    userId: user?._id,
+    items: orderItems,
+    address: formData,
+    amount
+  },
     { headers: { token } }
   );
+    console.log("BACKEND RESPONSE:", data);
+   
           if (data.success) {
             setCartItems({});
             navigate('/orders');
@@ -124,7 +142,7 @@ const PlaceOrder = () => {
       const response = await axios.post(backendUrl + '/api/order/razorpay', orderData, { headers: { token } });
 
       if (response.data.success) {
-        initPay(response.data.order);
+        initPay(response.data.order, orderItems);
       }
     } catch (error) {
       console.log(error);
@@ -135,65 +153,318 @@ const PlaceOrder = () => {
 
 
   return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
+  <form 
+  onSubmit={onSubmitHandler} 
+  className='w-full min-h-screen bg-[#050816] text-blue-100 overflow-hidden relative'
+>
 
-      {/* ---------- LEFT SIDE (DELIVERY INFORMATION) ------------- */}
-      <div className='flex flex-col gap-4 flex-1 max-w-[50%] px-4'>
-        <div className='text-xl sm:text-2xl my-3'>
-          <Title text1={'DELIVERY'} text2={'INFORMATION'} />
+  {/* BACKGROUND GLOWS */}
+  <div className='absolute top-0 left-0 w-[450px] h-[450px] bg-blue-500/20 blur-3xl rounded-full'></div>
+
+  <div className='absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/20 blur-3xl rounded-full'></div>
+
+  <div className='relative max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-14'>
+
+    {/* HEADER */}
+    <div className='text-center mb-14'>
+
+      <h1 className='text-4xl sm:text-5xl font-semibold text-white'>
+        Secure Checkout
+      </h1>
+
+      <p className='mt-4 text-blue-200 max-w-2xl mx-auto'>
+        Your handcrafted mandala is almost ready to begin its journey ✦
+      </p>
+
+    </div>
+
+    <div className='grid lg:grid-cols-[1.3fr_0.7fr] gap-10'>
+
+      {/* ---------- LEFT ---------- */}
+      <div
+        className='rounded-[2rem] overflow-hidden
+        bg-white/5 backdrop-blur-2xl
+        border border-white/10
+        shadow-2xl shadow-blue-900/20'
+      >
+
+        {/* TOP */}
+        <div className='p-7 border-b border-white/10'>
+
+          <Title text1={'DELIVERY'} text2={'DETAILS'} />
+
+          <p className='mt-3 text-blue-200 text-sm'>
+            Enter your shipping information carefully.
+          </p>
+
         </div>
 
-        <div className='flex gap-3'>
-          <input required onChange={onChangeHandler} name='firstName' value={formData.firstName} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='FirstName' />
-          <input required onChange={onChangeHandler} name='lastName' value={formData.lastName} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='LastName' />
-        </div>
-        <input required onChange={onChangeHandler} name='email' value={formData.email} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="email" placeholder='Email Address' />
-        <input required onChange={onChangeHandler} name='street' value={formData.street} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Street' />
-        <div className='flex gap-3'>
-          <input required onChange={onChangeHandler} name='city' value={formData.city} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='City' />
-          <input required onChange={onChangeHandler} name='state' value={formData.state} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='State' />
-        </div>
-        <div className='flex gap-3'>
-          <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Zipcode' />
-          <input required onChange={onChangeHandler} name='country' value={formData.country} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Country' />
-        </div>
-        <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Phone' />
+        {/* FORM */}
+      {/* FORM */}
+<div className='p-6 sm:p-8 flex flex-col gap-6'>
+
+  {/* NAME */}
+  <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
+
+    <div className='relative group'>
+      <input
+        required
+        onChange={onChangeHandler}
+        name='firstName'
+        value={formData.firstName}
+        placeholder=' '
+        className='checkout-input peer'
+      />
+      <label className='floating-label'>
+        First Name
+      </label>
+    </div>
+
+    <div className='relative group'>
+      <input
+        required
+        onChange={onChangeHandler}
+        name='lastName'
+        value={formData.lastName}
+        placeholder=' '
+        className='checkout-input peer'
+      />
+      <label className='floating-label'>
+        Last Name
+      </label>
+    </div>
+
+  </div>
+
+  {/* EMAIL */}
+  <div className='relative group'>
+    <input
+      required
+      onChange={onChangeHandler}
+      name='email'
+      value={formData.email}
+      type='email'
+      placeholder=' '
+      className='checkout-input peer'
+    />
+    <label className='floating-label'>
+      Email Address
+    </label>
+  </div>
+
+  {/* STREET */}
+  <div className='relative group'>
+    <input
+      required
+      onChange={onChangeHandler}
+      name='street'
+      value={formData.street}
+      placeholder=' '
+      className='checkout-input peer'
+    />
+    <label className='floating-label'>
+      Street Address
+    </label>
+  </div>
+
+  {/* CITY + STATE */}
+  <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
+
+    <div className='relative group'>
+      <input
+        required
+        onChange={onChangeHandler}
+        name='city'
+        value={formData.city}
+        placeholder=' '
+        className='checkout-input peer'
+      />
+      <label className='floating-label'>
+        City
+      </label>
+    </div>
+
+    <div className='relative group'>
+      <input
+        required
+        onChange={onChangeHandler}
+        name='state'
+        value={formData.state}
+        placeholder=' '
+        className='checkout-input peer'
+      />
+      <label className='floating-label'>
+        State
+      </label>
+    </div>
+
+  </div>
+
+  {/* ZIP + COUNTRY */}
+  <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
+
+    <div className='relative group'>
+      <input
+        required
+        onChange={onChangeHandler}
+        name='zipcode'
+        value={formData.zipcode}
+        type='number'
+        placeholder=' '
+        className='checkout-input peer'
+      />
+      <label className='floating-label'>
+        Zip Code
+      </label>
+    </div>
+
+    <div className='relative group'>
+      <input
+        required
+        onChange={onChangeHandler}
+        name='country'
+        value={formData.country}
+        placeholder=' '
+        className='checkout-input peer'
+      />
+      <label className='floating-label'>
+        Country
+      </label>
+    </div>
+
+  </div>
+
+  {/* PHONE */}
+  <div className='relative group'>
+    <input
+      required
+      onChange={onChangeHandler}
+      name='phone'
+      value={formData.phone}
+      type='number'
+      placeholder=' '
+      className='checkout-input peer'
+    />
+    <label className='floating-label'>
+      Phone Number
+    </label>
+  </div>
+
+</div>
+
       </div>
 
-      {/* ---------RIGHT SIDE (CART TOTAL + PAYMENT METHOD)---------------- */}
-      <div className='flex flex-col flex-1 max-w-[50%] px-4'>
-        <div className='mt-8 min-w-60'>
+      {/* ---------- RIGHT ---------- */}
+      <div className='flex flex-col gap-8'>
+
+        {/* CART TOTAL */}
+        <div
+          className='rounded-[2rem]
+          bg-white/5 backdrop-blur-2xl
+          border border-white/10
+          p-7
+          shadow-2xl shadow-blue-900/20'
+        >
+
           <CartTotal />
+
         </div>
 
-        <div className='mt-12'>
+        {/* PAYMENT */}
+        <div
+          className='rounded-[2rem]
+          bg-white/5 backdrop-blur-2xl
+          border border-white/10
+          p-7
+          shadow-2xl shadow-blue-900/20'
+        >
+
           <Title text1={'PAYMENT'} text2={'METHOD'} />
 
-          {/* Show QR or button based on device */}
-          {isMobile ? (
-            <button
-              type="submit"
-              disabled={loading}
-              className={`bg-green-500 text-white px-5 py-3 text-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              {loading ? "Placing Order..." : `Pay ₹${amount} via UPI`}
-            </button>
-          ) : (
-            <div className="flex flex-col items-center gap-4">
-              <p>TOTAL AMOUNT ₹{amount}</p>
+          {/* CARD */}
+          <div
+            className='mt-7 rounded-2xl overflow-hidden
+            border border-white/10
+            bg-gradient-to-br from-blue-500/10 to-indigo-500/10'
+          >
 
-              <button
-                type='submit'
-                className='bg-[#25D366] text-white px-16 py-3 text-sm active:bg-green-700 rounded-sm flex items-center justify-center gap-2'
-              >
-                MAKE PAYMENT
-              </button>
+            {/* TOP */}
+            <div className='p-6 border-b border-white/10'>
+
+              <div className='flex items-center justify-between'>
+
+                <div>
+
+                  <p className='text-sm uppercase tracking-[0.25em] text-blue-300'>
+                    Razorpay
+                  </p>
+
+                  <h3 className='text-2xl font-semibold text-white mt-2'>
+                    Secure Payment Gateway
+                  </h3>
+
+                </div>
+
+                <div className='w-14 h-14 rounded-2xl
+                bg-blue-500/15 border border-blue-400/20
+                flex items-center justify-center text-2xl'>
+
+                  💳
+
+                </div>
+
+              </div>
+
             </div>
-          )}
+
+            {/* TOTAL */}
+            <div className='p-6 text-center'>
+
+              <p className='text-blue-200 text-sm uppercase tracking-[0.2em]'>
+                Total Amount
+              </p>
+
+              <h2 className='text-4xl font-bold text-white mt-3'>
+                ₹{amount}
+              </h2>
+
+              <p className='mt-3 text-blue-200 text-sm'>
+                Includes shipping & secure processing
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* BUTTON */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`
+            mt-8 w-full py-4 rounded-2xl
+            bg-gradient-to-r from-blue-500 to-indigo-600
+            text-white font-medium tracking-wide
+            transition duration-300
+            hover:scale-[1.02]
+            hover:shadow-2xl hover:shadow-blue-500/30
+            active:scale-[0.98]
+            ${loading ? 'opacity-50 cursor-not-allowed' : ''}
+            `}
+          >
+
+            {loading ? "Processing..." : "Pay Securely ✦"}
+
+          </button>
+
         </div>
+
       </div>
 
-    </form>
+    </div>
+
+  </div>
+
+</form>
   )
 }
 

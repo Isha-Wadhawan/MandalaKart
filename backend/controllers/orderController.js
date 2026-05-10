@@ -18,34 +18,88 @@ const getRazorpayInstance = () => {
 };
 
 // placing orders using Cash on Delivery
+// const placeOrder = async (req, res) => {
+//   try {
+//     const { userId, items, amount, address } = req.body;
+
+//     const orderData = {
+//       userId: user?._id,
+//       items,
+//       amount,
+//       address,
+//       paymentMethod: "COD",
+//       payment: false,
+//       date: Date.now(),
+//     };
+
+//     const newOrder = new orderModel(orderData);
+//     await newOrder.save();
+
+//     // clear user's cart
+//     await userModel.findByIdAndUpdate(userId, { cartData: {} });
+
+//     res.json({
+//       success: true,
+//       message: "Order placed successfully",
+//       orderId: newOrder._id,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.json({ success: false, message: err.message });
+//   }
+// };
+
 const placeOrder = async (req, res) => {
   try {
+
     const { userId, items, amount, address } = req.body;
+
+    // 🔥 CLEAN ITEMS
+    const formattedItems = items.map((item) => ({
+      name: item.custom ? "Custom Mandala" : item.name,
+      image: item.image || item.images?.[0] || "",
+      quantity: item.quantity,
+      size: item.size,
+      price: item.price,
+      custom: item.custom || false,
+      colors: item.colors || [],
+      symmetry: item.symmetry || null,
+      layers: item.layers || null,
+      patternType: item.patternType || "",
+    }));
 
     const orderData = {
       userId,
-      items,
+      items: formattedItems,
       amount,
       address,
       paymentMethod: "COD",
       payment: false,
+      status: "Order Placed",
       date: Date.now(),
     };
 
     const newOrder = new orderModel(orderData);
+
     await newOrder.save();
 
-    // clear user's cart
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
+    // 🛒 CLEAR CART
+    await userModel.findByIdAndUpdate(userId, {
+      cartData: {}
+    });
 
     res.json({
       success: true,
       message: "Order placed successfully",
       orderId: newOrder._id,
     });
+
   } catch (err) {
     console.log(err);
-    res.json({ success: false, message: err.message });
+    res.json({
+      success: false,
+      message: err.message
+    });
   }
 };
 
@@ -62,7 +116,9 @@ const placeOrderRazorpay = async (req, res) => {
       receipt: `temp_${Date.now()}`,
       notes: {
         userId,
-        amount
+        amount,
+        items: JSON.stringify(items),
+        address: JSON.stringify(address)
       },
     });
 
@@ -81,51 +137,80 @@ const placeOrderRazorpay = async (req, res) => {
 // verifying Razorpay payment signature
 const verifyRazorpay = async (req, res) => {
   try {
+
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature
     } = req.body;
 
-    const signaturePayload = `${razorpay_order_id}|${razorpay_payment_id}`;
+    // 🔐 VERIFY SIGNATURE
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
 
-    const generatedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(signaturePayload)
-      .digest('hex');
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest("hex");
 
-    if (generatedSignature !== razorpay_signature) {
-      return res.json({ success: false, message: 'Payment verification failed' });
+    if (expectedSignature !== razorpay_signature) {
+      return res.json({
+        success: false,
+        message: "Payment verification failed"
+      });
     }
 
-    // 🔥 Fetch order details from Razorpay
+    // 🔥 FETCH ORDER FROM RAZORPAY
     const razorpay = getRazorpayInstance();
-    const order = await razorpay.orders.fetch(razorpay_order_id);
 
-    const { userId, items, address, amount } = order.notes;
+    const razorpayOrder = await razorpay.orders.fetch(
+      razorpay_order_id
+    );
 
-    // 🧾 Create order in DB AFTER success
+    // ✅ GET ORIGINAL DATA FROM NOTES
+    const userId = razorpayOrder.notes.userId;
+
+    const items = JSON.parse(
+      razorpayOrder.notes.items
+    );
+
+    const address = JSON.parse(
+      razorpayOrder.notes.address
+    );
+
+    const amount = razorpayOrder.amount / 100;
+
+    // 🧾 CREATE ORDER IN DATABASE
     const newOrder = new orderModel({
       userId,
-      items: JSON.parse(items),
+      items,
       amount,
-      address: JSON.parse(address),
+      address,
       paymentMethod: "Razorpay",
       payment: true,
       transactionRef: razorpay_payment_id,
-      date: Date.now(),
+      status: "Order Placed",
+      date: Date.now()
     });
 
     await newOrder.save();
 
-    // 🛒 Clear cart
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
+    // 🛒 CLEAR CART
+    await userModel.findByIdAndUpdate(userId, {
+      cartData: {}
+    });
 
-    res.json({ success: true, message: "Payment successful & order created" });
+    res.json({
+      success: true,
+      message: "Payment successful & order created"
+    });
 
   } catch (err) {
     console.log(err);
-    res.json({ success: false, message: err.message });
+
+    res.json({
+      success: false,
+      message: err.message
+    });
   }
 };
 

@@ -37,7 +37,10 @@ import cart_icon from './cart_icon.jpg'
 import menu_icon from './menu_icon.png'
 import dropdown_icon from './dropdown_icon.png'
 import hero_image from './hero_image.png'
+import heroImage from './heroImage.png'
 import logo from './logo.png'
+import logoLight from './logoLight.png'
+import logoDark from './logoDark.png'
 import exchange_icon from './exchange_icon.png'
 import quality_icon from './quality_icon.png'
 import support_icon from './support_icon.png'
@@ -50,6 +53,7 @@ import razorpay_logo from './razorpay_logo.png'
 import about_img from './about_img.jpg'
 import contact_img from './contact_image.jpg'
 import parcel_icon from './parcel_icon.svg'
+import bgImage from './bgImage.png'
 
 export const assets = {
     searchicon,
@@ -58,6 +62,7 @@ export const assets = {
     menu_icon,
     dropdown_icon,
     hero_image,
+    heroImage,
     logo,
     exchange_icon,
     quality_icon,
@@ -70,7 +75,10 @@ export const assets = {
     razorpay_logo,
     about_img,
     contact_img,
-    parcel_icon
+    parcel_icon,
+    logoLight,
+    logoDark,
+    bgImage,
 }
 
 export const products = [

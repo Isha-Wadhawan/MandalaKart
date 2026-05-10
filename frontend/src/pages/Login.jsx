@@ -60,26 +60,106 @@ const { token, setToken, userData, setUser, navigate, backendUrl } = useContext(
 
   }, [token])
 
-  return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'>
-        <div className='inline-flex items-center gap-2 mb-2 mt-10'>
-          <p className='prata-regular text-3xl'>{currentState}</p>
-          <hr className='border-none h-[1.5px] w-8 bg-gray-800'/>
-        </div>
-        {currentState === 'Login' ? '' : <input onChange={(e)=> setName(e.target.value)} value={name} type='text' className='w-full px-3 py-2 border border-gray-800' placeholder='Name' required></input> }
-        <input onChange={(e)=> setEmail(e.target.value)} value={email} type='email' className='w-full px-3 py-2 border border-gray-800' placeholder='Email' required></input>
-        <input onChange={(e)=> setPassword(e.target.value)} value={password} type='password' className='w-full px-3 py-2 border border-gray-800' placeholder='Password' required></input>
-        <div className='w-full flex justify-between text-sm mt-[-8px]'>
-          <p className='cursor-pointer'>Forgot Password</p>
-          {
-            currentState === 'Login'
-            ? <p onClick={()=>setCurrentState('SignUp')} className='cursor-pointer'>Create Account</p>
-            : <p onClick={()=>setCurrentState('Login')} className='cursor-pointer'>Login Here</p>
-          }
-        </div>
-        <button type = "submit" className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
+ return (
+  <div className='w-full min-h-screen bg-blue-900 flex items-center justify-center px-4'>
+
+    <form 
+      onSubmit={onSubmitHandler} 
+      className='w-full sm:max-w-md 
+      bg-white/5 backdrop-blur-md 
+      border border-white/10 
+      rounded-xl p-6 sm:p-8 
+      flex flex-col gap-4 
+      text-blue-100 
+      hover:border-blue-400 
+      transition duration-300 
+      shadow-lg shadow-blue-500/10'
+    >
+
+      {/* HEADER */}
+      <div className='text-center mb-4'>
+        <p className='text-3xl font-semibold text-white'>
+          {currentState}
+        </p>
+        <div className='w-10 h-[2px] bg-blue-400 mx-auto mt-2'></div>
+      </div>
+
+      {/* NAME */}
+      {currentState !== 'Login' && (
+        <input
+          onChange={(e)=> setName(e.target.value)}
+          value={name}
+          type='text'
+          placeholder='Full Name'
+          className='input-style'
+          required
+        />
+      )}
+
+      {/* EMAIL */}
+      <input
+        onChange={(e)=> setEmail(e.target.value)}
+        value={email}
+        type='email'
+        placeholder='Email Address'
+        className='input-style'
+        required
+      />
+
+      {/* PASSWORD */}
+      <input
+        onChange={(e)=> setPassword(e.target.value)}
+        value={password}
+        type='password'
+        placeholder='Password'
+        className='input-style'
+        required
+      />
+
+      {/* LINKS */}
+      <div className='flex justify-between text-xs sm:text-sm text-blue-200 mt-1'>
+        <p className='cursor-pointer hover:text-white transition'>
+          Forgot Password
+        </p>
+
+        {
+          currentState === 'Login'
+          ? (
+            <p 
+              onClick={()=>setCurrentState('SignUp')} 
+              className='cursor-pointer hover:text-white transition'
+            >
+              Create Account
+            </p>
+          )
+          : (
+            <p 
+              onClick={()=>setCurrentState('Login')} 
+              className='cursor-pointer hover:text-white transition'
+            >
+              Login Instead
+            </p>
+          )
+        }
+      </div>
+
+      {/* BUTTON */}
+      <button
+        type="submit"
+        className='mt-4 w-full py-2.5 rounded-lg 
+        bg-blue-500 hover:bg-blue-400 
+        text-white text-sm font-medium 
+        transition duration-300 
+        hover:shadow-lg hover:shadow-blue-400/30 
+        active:scale-[0.97]'
+      >
+        {currentState === 'Login' ? 'Sign In' : 'Create Account'}
+      </button>
+
     </form>
-  )
+
+  </div>
+)
 }
 
 export default Login

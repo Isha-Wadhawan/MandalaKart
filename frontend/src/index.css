@@ -29,3 +29,115 @@ a.active hr{
     
   }
 
+
+  .form-input {
+  @apply w-full px-3 pt-5 pb-2 rounded-lg 
+  bg-white/10 text-white 
+  border border-white/20 
+  outline-none 
+  transition duration-300
+  focus:border-blue-400 focus:ring-1 focus:ring-blue-400;
+}
+
+.form-label {
+  @apply absolute left-3 top-2 text-sm text-blue-200 
+  transition-all duration-300 pointer-events-none;
+}
+
+/* Floating effect */
+.peer:placeholder-shown ~ .form-label {
+  @apply top-3 text-base text-blue-300;
+}
+
+.peer:focus ~ .form-label,
+.peer:not(:placeholder-shown) ~ .form-label {
+  @apply top-1 text-xs text-blue-200;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+  -webkit-text-fill-color: #e0f2fe !important; /* light blue text */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.input-style {
+  @apply w-full px-4 py-3 rounded-xl 
+  bg-white/5 backdrop-blur-md 
+  text-blue-100 
+  border border-white/10 
+  outline-none 
+  placeholder:text-blue-300 
+  transition duration-300;
+}
+
+/* focus glow */
+.input-style:focus {
+  @apply border-blue-400 ring-1 ring-blue-400 shadow-lg shadow-blue-400/20;
+}
+
+/* subtle hover lift */
+.input-style:hover {
+  @apply border-blue-300;
+}
+
+.checkout-input{
+  width:100%;
+  padding:22px 18px 12px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  color:white;
+  outline:none;
+  font-size:15px;
+  transition:0.35s;
+  backdrop-filter:blur(16px);
+}
+
+.checkout-input:hover{
+  border-color:rgba(96,165,250,0.35);
+  background:rgba(255,255,255,0.06);
+}
+
+.checkout-input:focus{
+  border-color:#60a5fa;
+  background:rgba(255,255,255,0.08);
+  box-shadow:
+    0 0 0 4px rgba(59,130,246,0.12),
+    0 0 30px rgba(59,130,246,0.18);
+}
+
+/* REMOVE NUMBER INPUT ARROWS */
+.checkout-input::-webkit-outer-spin-button,
+.checkout-input::-webkit-inner-spin-button{
+  -webkit-appearance:none;
+  margin:0;
+}
+
+.checkout-input[type=number]{
+  -moz-appearance:textfield;
+}
+
+/* FLOATING LABEL */
+.floating-label{
+  position:absolute;
+  left:18px;
+  top:18px;
+  color:rgba(191,219,254,0.65);
+  font-size:14px;
+  pointer-events:none;
+  transition:0.3s;
+  background:transparent;
+}
+
+/* FLOAT UP */
+.peer:focus ~ .floating-label,
+.peer:not(:placeholder-shown) ~ .floating-label{
+  top:8px;
+  font-size:11px;
+  letter-spacing:0.08em;
+  color:#93c5fd;
+}
