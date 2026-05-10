@@ -132,7 +132,7 @@ const CustomMandala = () => {
     const uploadToCloudinary = async () => {
         try {
             const res = await fetch(
-                "http://localhost:4000/api/upload/mandala",
+                `${import.meta.env.VITE_BACKEND_URL}/upload/mandala`,
                 {
                     method: "POST",
                     headers: {
