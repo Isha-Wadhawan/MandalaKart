@@ -20,7 +20,7 @@ connectCloudinary();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors({
-  origin: ["http://localhost:5173", "https://mandala-kart-tiltz7mq2-ishwa2746-8129s-projects.vercel.app", "https://mandala-kart-tnrt.vercel.app/"],
+  origin: ["http://localhost:5173", "https://mandala-kart-tiltz7mq2-ishwa2746-8129s-projects.vercel.app", "https://mandala-kart-tnrt.vercel.app"],
   credentials: true
 }));
 
